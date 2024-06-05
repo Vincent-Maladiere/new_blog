@@ -1,4 +1,17 @@
-const withMDX = require('@next/mdx')();
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+  options: async () => {
+    const [remarkMath, rehypeKatex] = await Promise.all([
+      import('remark-math'),
+      import('rehype-katex')
+    ]);
+
+    return {
+      remarkPlugins: [remarkMath.default],
+      rehypePlugins: [rehypeKatex.default],
+    };
+  },
+});
  
 /** @type {import('next').NextConfig} */
 const nextConfig = {
